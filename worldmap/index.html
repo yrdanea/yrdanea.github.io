@@ -39,12 +39,8 @@
 
 		// set the view to the center of the map [0, 0]
 		var map = L.map('map');
-		// Erkennt, ob wir auf GitHub/Webspace sind oder lokal (localhost oder Datei)
-		var isLocal = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1" || window.location.protocol === "file:";
-
-		// Wenn lokal, nutzen wir den relativen Pfad, online den absoluten mit /kompendium/
-		var pathPrefix = isLocal ? "../" : "/kompendium/";
-		layer = L.tileLayer(pathPrefix +'/worldmap/tiles/{z}/{x}/{y}.jpg', {
+		
+		layer = L.tileLayer('tiles/{z}/{x}/{y}.jpg', {
 			minZoom: mapMinZoom,
 			maxZoom: mapMaxZoom,
 			attribution: '<a href=https://yrdanea.github.io target=_parent>Yrdanea</a> - Created with <a href=https://github.com/battosey/mapTailor/wiki target=_blank>MapTailor</a>',
@@ -54,7 +50,7 @@
 		
 		// Icons
 		var testIcon = L.icon({
-			iconUrl: pathPrefix +'/worldmap/src/img/logo.svg',
+			iconUrl: 'src/img/logo.svg',
 			iconSize: [120,120],
 		});
 		// Popups
@@ -92,7 +88,7 @@
 		L.control.mousePosition().addTo(map)
 	</script>
 	<!-- Link to leaflet Sidebar.js file. -->
-	<script src='/kompendium/worldmap/src/L.Control.Sidebar.js'></script>
+	<script src='src/L.Control.Sidebar.js'></script>
 	<div id="sidebar"></div>
   </body>
 </html>

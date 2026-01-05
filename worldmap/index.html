@@ -1,133 +1,93 @@
 <!DOCTYPE html>
 <html>
-  <head>
-	<title>Yrdanea Vergangenheit</title>
-	<meta charset='utf-8'>
-	<meta name = 'viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no'>
-	<meta name = 'apple-mobile-web-app-capable' content='yes'>
-	<link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.3.1/leaflet.css'>
-	<link rel='stylesheet' href='https://cdn.rawgit.com/ardhi/Leaflet.MousePosition/master/src/L.Control.MousePosition.css'>
-	<link rel="stylesheet" href="https://unpkg.com/leaflet-sidebar-v2@3.2.3/css/leaflet-sidebar.min.css">
-	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<head>
+    <title>Yrdanea Vergangenheit</title>
+    <meta charset='utf-8'>
+    <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no'>
+    <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.3.1/leaflet.css'>
+    <link rel='stylesheet' href='https://cdn.rawgit.com/ardhi/Leaflet.MousePosition/master/src/L.Control.MousePosition.css'>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet-sidebar-v2@3.2.3/css/leaflet-sidebar.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
-	<script src='https://unpkg.com/leaflet@1.3.1/dist/leaflet.js' type='text/javascript'></script>
-	<script src='https://cdn.rawgit.com/ardhi/Leaflet.MousePosition/master/src/L.Control.MousePosition.js' type='text/javascript'></script>
-	<script src='https://unpkg.com/leaflet-sidebar-v2@3.2.3/js/leaflet-sidebar.min.js'></script>
-	<style type="text/css">
-	  html, body, #map { width:100vw; height:100%; margin:0; padding:0; z-index: 1; background: #101010; }
-	  #fit{ position: absolute; top: 10px; right: 10px; z-index: 5;}
+    <script src='https://unpkg.com/leaflet@1.3.1/dist/leaflet.js'></script>
+    <script src='https://cdn.rawgit.com/ardhi/Leaflet.MousePosition/master/src/L.Control.MousePosition.js'></script>
+    <script src='https://unpkg.com/leaflet-sidebar-v2@3.2.3/js/leaflet-sidebar.min.js'></script>
 
-	  /* Verhindert, dass Reste der Sidebar v1 das Layout stören */
-.leaflet-sidebar {
-    border: none !important;
-    box-shadow: none !important;
-}
+    <style type="text/css">
+        html, body, #map { width:100vw; height:100%; margin:0; padding:0; z-index: 1; background: #101010; }
+        #fit { position: absolute; top: 10px; right: 10px; z-index: 5; }
+        .leaflet-sidebar { border: none !important; box-shadow: none !important; }
+        .leaflet-sidebar-content { background-color: rgba(30, 30, 30, 0.95) !important; color: #e0e0e0 !important; }
+        .leaflet-sidebar-tabs { background-color: #222 !important; }
+        .leaflet-sidebar-header { background-color: #444 !important; }
+        .leaflet-sidebar-tabs > ul > li > a { color: #ffffff !important; }
+    </style>
+</head>
+<body>
+    <div id='map'></div>
+    <button id='fit' onClick='resetView()'>Reset View</button>
 
-/* Sidebar v2 Hintergrund anpassen */
-.leaflet-sidebar-content {
-    background-color: rgba(30, 30, 30, 0.95) !important;
-    color: #e0e0e0 !important;
-}
-
-.leaflet-sidebar-tabs {
-    background-color: #222 !important;
-}
-
-.leaflet-sidebar-header {
-    background-color: #444 !important;
-}
-	</style>
-  </head>
-  <body>
-	<div id = 'map' ></div>
-	<button id='fit' onClick='resetView()'>Reset View</button>
-
-
-	<script type = 'text/javascript'>
-		// zoom settings
-		var mapMinZoom   = 1;
-		var mapMaxZoom   = 5;
-		var zoomSnap	 = 0.25;
-
-		// latitude  = vertical angle from the center of the world to the poles
-		//(90 = north pole, -90 = south pole)
-		// longitude = horizontal angle from the center of the world around the equator
-		//(-180 = other side of the planet going left, +180 = other side of the planet going right)
-		// if your map is not square in size you need to adjust the values below (https://leafletjs.com/examples/zoom-levels/)
-		var northWest = new L.LatLng(+90, -180),
-			southEast = new L.LatLng(-90, +180),
-			bounds = new L.LatLngBounds(northWest, southEast);
-
-		// set the view to the center of the map [0, 0]
-		var map = L.map('map');
-		
-		layer = L.tileLayer('tiles/{z}/{x}/{y}.jpg', {
-			minZoom: mapMinZoom,
-			maxZoom: mapMaxZoom,
-			attribution: '<a href=https://yrdanea.github.io/kompendium target=_parent>Yrdanea</a> - Created with <a href=https://github.com/battosey/mapTailor/wiki target=_blank>MapTailor</a>',
-			noWrap: true,
-			tms: false
-		}).addTo(map);
-		
-		// Icons
-		var testIcon = L.icon({
-			iconUrl: 'src/img/logo.svg',
-			iconSize: [120,120],
-		});
-		// Popups
-		{
-			var mapCenterPopup = "<b>Map Center</b> This is the center of the map.";
-		} 
-		
-		// Sidebar v2 Initialisierung
-		var sidebar = L.control.sidebar({ container: 'sidebar', position: 'left' }).addTo(map);
-		
-		map.addControl(sidebar);
-
-		// Add markers here (https://leafletjs.com/reference-1.6.0.html#marker)
-		// You can uncomment the next line to have an example marker
-		// Markers
-		{	
-			var mapCenter = L.marker([0.0, 0.0], {title:"mapcenter"}).addTo(map);
-			var mapCenter = L.marker([0.0, 0.0], {icon:testIcon}).on('click', function(){
-			sidebar.setContent('<h1> MapCenter </h1>' + mapCenterPopup).show();
-			});
-		}
-		// Add shapes here (https://leafletjs.com/reference-1.6.0.html#polygon)
-		// You can uncomment the next line to have an example rectangle
-		//L.rectangle(L.latLngBounds([northWest, southEast]), {color: '#0078ff', weight: 1, fill: false}).addTo(map);
-		
-		
-		function resetView()
-		{
-			map.fitBounds(bounds);
-		}
-		resetView();
-
-		// adds the mouse cursor position widget to the lower left corner of the map
-		L.control.mousePosition().addTo(map)
-	</script>
-	<!-- Link to leaflet Sidebar.js file. -->
-	<script src='src/L.Control.Sidebar.js'></script>
-	<div id="sidebar" class="leaflet-sidebar collapsed">
-    <div class="leaflet-sidebar-tabs">
-        <ul role="tablist">
-            <li><a href="#home" role="tab"><i class="fa fa-bars"></i></a></li>
-            <li><a href="#profile" role="tab"><i class="fa fa-user"></i></a></li>
-        </ul>
-    </div>
-
-    <div class="leaflet-sidebar-content">
-        <div class="leaflet-sidebar-pane" id="home">
-            <h1 class="leaflet-sidebar-header">
-                Informationen
-                <div class="leaflet-sidebar-close"><i class="fa fa-caret-left"></i></div>
-            </h1>
-            <div id="sidebar-content-area">
-                Klicke auf ein Icon oder Marker.
+    <div id="sidebar" class="leaflet-sidebar collapsed">
+        <div class="leaflet-sidebar-tabs">
+            <ul role="tablist">
+                <li><a href="#home" role="tab"><i class="fa fa-bars"></i></a></li>
+            </ul>
+        </div>
+        <div class="leaflet-sidebar-content">
+            <div class="leaflet-sidebar-pane" id="home">
+                <h1 class="leaflet-sidebar-header">
+                    Informationen
+                    <span class="leaflet-sidebar-close"><i class="fa fa-caret-left"></i></span>
+                </h1>
+                <div id="sidebar-content-area" style="padding: 15px;">
+                    Wähle einen Ort aus...
+                </div>
             </div>
         </div>
     </div>
-</div>
-  </body>
+
+    <script type='text/javascript'>
+        var mapMinZoom = 1;
+        var mapMaxZoom = 5;
+        var northWest = new L.LatLng(+90, -180),
+            southEast = new L.LatLng(-90, +180),
+            bounds = new L.LatLngBounds(northWest, southEast);
+
+        var map = L.map('map');
+        
+        L.tileLayer('tiles/{z}/{x}/{y}.jpg', {
+            minZoom: mapMinZoom,
+            maxZoom: mapMaxZoom,
+            attribution: 'Yrdanea',
+            noWrap: true,
+            tms: false
+        }).addTo(map);
+        
+        // Icon Definition ohne Schatten-Fehler
+        var testIcon = L.icon({
+            iconUrl: 'src/img/logo.svg',
+            iconSize: [120, 120],
+            iconAnchor: [60, 60],
+            className: 'map-logo-icon', // Eigene Klasse verhindert Standard-Rahmen
+            shadowUrl: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII='
+        });
+
+        var mapCenterPopup = "<b>Map Center</b> This is the center of the map.";
+
+        // Sidebar Initialisierung (Jetzt findet er das Element 'sidebar'!)
+        var sidebar = L.control.sidebar({ container: 'sidebar', position: 'left' }).addTo(map);
+
+        // Marker
+        var mapCenterMarker = L.marker([0.0, 0.0], {icon:testIcon}).addTo(map);
+
+        mapCenterMarker.on('click', function() {
+            document.getElementById('sidebar-content-area').innerHTML = '<h1> MapCenter </h1>' + mapCenterPopup;
+            sidebar.open('home'); 
+        });
+
+        function resetView() { map.fitBounds(bounds); }
+        resetView();
+        L.control.mousePosition().addTo(map);
+    </script>
+</body>
 </html>

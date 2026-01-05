@@ -91,6 +91,24 @@
 	</script>
 	<!-- Link to leaflet Sidebar.js file. -->
 	<script src='src/L.Control.Sidebar.js'></script>
-	<div id="sidebar"></div>
+	<div id="sidebar" class="leaflet-sidebar collapsed">
+    <div class="leaflet-sidebar-tabs">
+        <ul role="tablist">
+            <li><a href="#home" role="tab"><i class="fa fa-bars"></i></a></li>
+        </ul>
+    </div>
+
+    <div class="leaflet-sidebar-content">
+        <div class="leaflet-sidebar-pane" id="home">
+            <h1 class="leaflet-sidebar-header">
+                Karten-Info
+                <span class="leaflet-sidebar-close"><i class="fa fa-caret-left"></i></span>
+            </h1>
+            <div id="sidebar-content-area">
+                Wähle einen Ort auf der Karte aus.
+            </div>
+        </div>
+    </div>
+</div>
   </body>
 </html>

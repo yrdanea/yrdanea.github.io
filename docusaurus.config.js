@@ -8,10 +8,10 @@ const config = {
   favicon: 'img/favicon.ico',
 
   url: 'https://yrdanea.github.io',
-  baseUrl: '/build/',
+  baseUrl: '/kompendium/',
 
   organizationName: 'yrdanea',
-  projectName: 'yrdanea.github.io',
+  projectName: 'kompendium',
   trailingSlash: false,
   deploymentBranch: 'gh-pages',
 

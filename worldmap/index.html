@@ -21,7 +21,16 @@
         .leaflet-sidebar-tabs { background-color: #222 !important; }
         .leaflet-sidebar-header { background-color: #444 !important; }
         .leaflet-sidebar-tabs > ul > li > a { color: #ffffff !important; }
-    </style>
+		.leaflet-marker-icon {
+    display: block !important;
+}
+
+/* Verhindert, dass SVGs auf 0px kollabieren */
+img[src$=".svg"] {
+    width: 120px !important;
+    height: 120px !important;
+}
+	</style>
 </head>
 <body>
     <div id='map'></div>
@@ -65,7 +74,7 @@
         
         // Icon Definition ohne Schatten-Fehler
         var testIcon = L.icon({
-            iconUrl: 'src/img/logo.svg',
+            iconUrl: 'img/logo.svg',
             iconSize: [120, 120],
             iconAnchor: [60, 60],
             className: 'map-logo-icon', // Eigene Klasse verhindert Standard-Rahmen

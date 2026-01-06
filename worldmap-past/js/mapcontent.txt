@@ -1,0 +1,4 @@
+// This becomes the content of your foo.txt file
+let textRegion = `
+My test text goes here!
+`;
